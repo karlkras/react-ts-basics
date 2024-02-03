@@ -1,12 +1,23 @@
 import { FC, ReactNode } from "react";
-type InfoboxProps = {
-  mode: "hint" | "warning",
+import { InfoBoxMode, WarningSeverity } from "../assets/utils/enums.ts";
+
+type HintBoxProps = {
+  mode: InfoBoxMode.Hint;
   children: ReactNode
 }
 
-const InfoBox: FC<InfoboxProps> = ({mode, children}) => {
+type WarningBoxProps = {
+  mode: InfoBoxMode.Warning;
+  severity: WarningSeverity
+  children: ReactNode
+}
 
-  if(mode === "hint") {
+type InfoboxProps = HintBoxProps | WarningBoxProps;
+
+const InfoBox: FC<InfoboxProps> = (props) => {
+  const { children, mode} = props;
+
+  if(mode === InfoBoxMode.Hint) {
     return (
       <aside className="infobox infobox-hint">
           <p>{children}</p>
@@ -14,9 +25,10 @@ const InfoBox: FC<InfoboxProps> = ({mode, children}) => {
     )
   }
 
+  const {severity} = props;
 
   return (
-    <aside className="infobox infobox-warning warning--medium">
+    <aside className={`infobox infobox-warning warning--${severity}`}>
       <h2>Warning</h2>
       <p>{children}</p>
     </aside>
